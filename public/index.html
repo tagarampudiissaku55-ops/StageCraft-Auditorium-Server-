@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StageCraft Auditorium · Sound Equipment Management</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --tag-bg: #0369a1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .badge {
+      background: #facc15;
+      color: #000;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-sub {
+      background: #0284c7;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
+    h1 { font-size: 1.75rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    p.subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media(min-width: 900px) {
+      .grid-2 { grid-template-columns: 3fr 2fr; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+
+    input, select, button {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    button.primary { background: var(--accent); color: #000; border: none; }
+    button.primary:hover { background: var(--accent-hover); color: #fff; }
+    button.danger { background: var(--danger); color: #fff; border: none; }
+    button.danger:hover { background: #dc2626; }
+    button.test-btn {
+      background: #334155;
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+    }
+    button.test-btn:hover { background: #0284c7; color: #fff; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .tag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .tag-subwoofer { background: #581c87; color: #e9d5ff; }
+    .tag-pa { background: #1e3a8a; color: #bfdbfe; }
+    .tag-monitor { background: #064e3b; color: #a7f3d0; }
+    .tag-linearray { background: #7c2d12; color: #fed7aa; }
+
+    .status-available { color: var(--success); font-weight: 600; }
+    .status-lent { color: var(--warning); font-weight: 600; }
+    .status-late { color: var(--danger); font-weight: 700; }
+
+    .twist-banner {
+      background: #451a03;
+      border: 1px solid #d97706;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .output-box {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #38bdf8;
+      max-height: 180px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-top: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .form-group input, .form-group select { width: 100%; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <span class="badge">JP-GAI2C-G10</span>
+      <h1 style="margin-top: 8px;">StageCraft Auditorium</h1>
+      <p class="subtitle">Theme 25: Sound Equipment Management System · Joel Prashanth</p>
+    </div>
+    <div style="text-align: right;">
+      <span class="badge-sub">Backend Development Fundamentals</span>
+      <p class="subtitle" style="margin-top: 6px;">Express.js + SQLite3 System</p>
+    </div>
+  </header>
+
+  <!-- Twist Interactive Tester Banner -->
+  <div class="twist-banner">
+    <div>
+      <strong style="color: #fde68a;">Twist Rule: "Sorted lists"</strong>
+      <div style="font-size: 0.85rem; color: #cbd5e1;">
+        GET /speakers?sort=name&order=asc|desc (unknown field returns 400 "Cannot sort by that field")
+      </div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button class="test-btn" onclick="runTwistTest('name', 'asc')">Test 1: Sort A-Z (200)</button>
+      <button class="test-btn" onclick="runTwistTest('name', 'desc')">Test 2: Sort Z-A (200)</button>
+      <button class="test-btn" style="border-color: var(--danger); color: #f87171;" onclick="runTwistTest('colour', 'asc')">Test 3: Sort colour (400)</button>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <!-- Left Column: Speakers Inventory -->
+    <div class="card">
+      <div class="card-title">
+        <span>Sound Equipment Inventory</span>
+        <button class="primary" style="font-size: 0.8rem;" onclick="loadSpeakers()">Refresh</button>
+      </div>
+
+      <div class="controls-row">
+        <input type="text" id="searchInput" placeholder="Search by type or name..." onkeyup="handleSearch(event)">
+        <select id="typeFilter" onchange="loadSpeakers()">
+          <option value="">All Types</option>
+          <option value="Subwoofer">Subwoofer</option>
+          <option value="PA Speaker">PA Speaker</option>
+          <option value="Stage Monitor">Stage Monitor</option>
+          <option value="Line Array">Line Array</option>
+        </select>
+        <select id="sortSelect" onchange="loadSpeakers()">
+          <option value="">Default Order (ID)</option>
+          <option value="name_asc">Name: A to Z (Twist 1)</option>
+          <option value="name_desc">Name: Z to A (Twist 2)</option>
+          <option value="type_asc">Type: A to Z</option>
+        </select>
+      </div>
+
+      <table id="speakersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Equipment Name</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="speakersBody">
+          <!-- Loaded dynamically -->
+        </tbody>
+      </table>
+
+      <div id="twistOutput" class="output-box" style="display: none;"></div>
+    </div>
+
+    <!-- Right Column: Add Speaker & Bookings Join -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <!-- Add Speaker Form -->
+      <div class="card">
+        <div class="card-title">Add Sound Equipment</div>
+        <form id="addSpeakerForm" onsubmit="addSpeaker(event)">
+          <div class="form-group">
+            <label>Speaker Name</label>
+            <input type="text" id="newSpeakerName" placeholder="e.g. Yamaha DZR12" required>
+          </div>
+          <div class="form-group">
+            <label>Speaker Type</label>
+            <select id="newSpeakerType" required>
+              <option value="PA Speaker">PA Speaker</option>
+              <option value="Subwoofer">Subwoofer</option>
+              <option value="Stage Monitor">Stage Monitor</option>
+              <option value="Line Array">Line Array</option>
+            </select>
+          </div>
+          <button type="submit" class="primary" style="width: 100%;">Add Equipment (POST /speakers)</button>
+        </form>
+      </div>
+
+      <!-- Relational Join Endpoint Table -->
+      <div class="card">
+        <div class="card-title">
+          <span>Active Bookings (Join Endpoint)</span>
+          <button class="primary" style="font-size: 0.8rem;" onclick="loadBookings()">Refresh</button>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          SQL Join: <code>bookings</code> + <code>technicians.name</code> + <code>speakers.name</code>
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Club & Event</th>
+              <th>Speaker (Joined)</th>
+              <th>Technician (Joined)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsBody">
+            <!-- Loaded dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE = '';
+
+  async function loadSpeakers() {
+    const search = document.getElementById('searchInput').value.trim();
+    const type = document.getElementById('typeFilter').value;
+    const sortVal = document.getElementById('sortSelect').value;
+
+    let url = `${API_BASE}/speakers?`;
+    const params = [];
+    if (search) params.push(`search=${encodeURIComponent(search)}`);
+    if (type) params.push(`type=${encodeURIComponent(type)}`);
+
+    if (sortVal === 'name_asc') {
+      params.push('sort=name&order=asc');
+    } else if (sortVal === 'name_desc') {
+      params.push('sort=name&order=desc');
+    } else if (sortVal === 'type_asc') {
+      params.push('sort=type&order=asc');
+    }
+
+    url += params.join('&');
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      renderSpeakers(data);
+    } catch (e) {
+      console.error('Failed to load speakers:', e);
+    }
+  }
+
+  function renderSpeakers(speakers) {
+    const tbody = document.getElementById('speakersBody');
+    tbody.innerHTML = '';
+
+    if (!speakers || speakers.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No sound equipment found</td></tr>';
+      return;
+    }
+
+    speakers.forEach(s => {
+      const tr = document.createElement('tr');
+      const typeClass = s.type.toLowerCase().includes('sub') ? 'tag-subwoofer' :
+                        s.type.toLowerCase().includes('pa') ? 'tag-pa' :
+                        s.type.toLowerCase().includes('monitor') ? 'tag-monitor' : 'tag-linearray';
+      const statusClass = s.status === 'Available' ? 'status-available' :
+                          s.status === 'Late' ? 'status-late' : 'status-lent';
+
+      tr.innerHTML = `
+        <td>#${s.id}</td>
+        <td><strong>${s.name}</strong></td>
+        <td><span class="tag ${typeClass}">${s.type}</span></td>
+        <td><span class="${statusClass}">● ${s.status}</span></td>
+        <td>
+          <button class="danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="deleteSpeaker(${s.id})">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function addSpeaker(e) {
+    e.preventDefault();
+    const name = document.getElementById('newSpeakerName').value;
+    const type = document.getElementById('newSpeakerType').value;
+
+    const res = await fetch(`${API_BASE}/speakers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, type, status: 'Available' })
+    });
+
+    if (res.ok) {
+      document.getElementById('newSpeakerName').value = '';
+      loadSpeakers();
+    } else {
+      const err = await res.json();
+      alert(`Error (${res.status}): ${err.error || err.message}`);
+    }
+  }
+
+  async function deleteSpeaker(id) {
+    if (!confirm(`Delete speaker #${id}?`)) return;
+    const res = await fetch(`${API_BASE}/speakers/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      loadSpeakers();
+    } else {
+      alert('Failed to delete speaker');
+    }
+  }
+
+  async function loadBookings() {
+    try {
+      const res = await fetch(`${API_BASE}/bookings`);
+      const bookings = await res.json();
+      const tbody = document.getElementById('bookingsBody');
+      tbody.innerHTML = '';
+
+      if (!bookings || bookings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No bookings recorded</td></tr>';
+        return;
+      }
+
+      bookings.forEach(b => {
+        const tr = document.createElement('tr');
+        const statusClass = b.status === 'Late' ? 'status-late' : (b.status === 'Returned' ? 'status-available' : 'status-lent');
+        tr.innerHTML = `
+          <td>
+            <strong>${b.club_name}</strong><br>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">${b.event_name}</span>
+          </td>
+          <td>
+            <strong>${b.speaker_name}</strong><br>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">${b.speaker_type}</span>
+          </td>
+          <td>
+            <span style="color: var(--accent); font-weight: 600;">${b.technician_name}</span>
+          </td>
+          <td><span class="${statusClass}">${b.status}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (e) {
+      console.error('Failed to load bookings:', e);
+    }
+  }
+
+  async function runTwistTest(sortField, order) {
+    const outputBox = document.getElementById('twistOutput');
+    outputBox.style.display = 'block';
+    outputBox.textContent = `Testing: GET /speakers?sort=${sortField}${order ? '&order=' + order : ''} ...`;
+
+    try {
+      const res = await fetch(`${API_BASE}/speakers?sort=${sortField}&order=${order}`);
+      const data = await res.json();
+      outputBox.textContent = `HTTP ${res.status} ${res.statusText}\n` + JSON.stringify(data, null, 2);
+      loadSpeakers();
+    } catch (e) {
+      outputBox.textContent = `Error: ${e.message}`;
+    }
+  }
+
+  function handleSearch(e) {
+    if (e.key === 'Enter') loadSpeakers();
+  }
+
+  // Initial load
+  loadSpeakers();
+  loadBookings();
+</script>
+</body>
+</html>

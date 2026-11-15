@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const speakersRouter = require('./routes/speakers');
 const techniciansRouter = require('./routes/technicians');
 const bookingsRouter = require('./routes/bookings');
@@ -8,18 +9,11 @@ const app = express();
 // Parse JSON request bodies
 app.use(express.json());
 
-// Request logging middleware (optional, for development debugging)
-app.use((req, res, next) => {
-  const start = Date.now();
-  res.on('finish', () => {
-    const duration = Date.now() - start;
-    // Keep console output clean and helpful
-  });
-  next();
-});
+// Serve static frontend files (Interactive Demo Dashboard)
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Root welcome / status endpoint
-app.get('/', (req, res) => {
+// API information endpoint
+app.get('/api', (req, res) => {
   res.status(200).json({
     project: 'StageCraft Auditorium Sound Equipment Tracking System',
     brief: 'BDF Group Assignment - Theme 25: Sound Equipment',
