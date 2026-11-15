@@ -1,0 +1,650 @@
+{
+  "info": {
+    "_postman_id": "a9b74301-8b17-48f6-a81d-e97d1b3f9c01",
+    "name": "StageCraft Auditorium - Sound Equipment API (JP-GAI2C-G10)",
+    "description": "Postman Collection for StageCraft Auditorium Sound Equipment Tracking System.\nBDF Group Assignment · Theme 25: Sound Equipment · Group JP-GAI2C-G10 (Joel Prashanth).\nIncludes tests for full CRUD, validation, the join endpoint, and all 3 Twist tests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Twist Tests (Sorted Lists)",
+      "item": [
+        {
+          "name": "Test 1: sort=name&order=asc -> 200 (A to Z)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers?sort=name&order=asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"],
+              "query": [
+                { "key": "sort", "value": "name" },
+                { "key": "order", "value": "asc" }
+              ]
+            },
+            "description": "Test 1 required by brief: Sorts speakers alphabetically from A to Z with status 200."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"List is sorted alphabetically A to Z\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data).to.be.an('array');",
+                  "    pm.expect(data.length).to.be.above(0);",
+                  "    for (let i = 0; i < data.length - 1; i++) {",
+                  "        pm.expect(data[i].name.localeCompare(data[i + 1].name)).to.be.at.most(0);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test 2: sort=name&order=desc -> 200 (Z to A)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers?sort=name&order=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"],
+              "query": [
+                { "key": "sort", "value": "name" },
+                { "key": "order", "value": "desc" }
+              ]
+            },
+            "description": "Test 2 required by brief: Sorts speakers alphabetically from Z to A with status 200."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"List is sorted alphabetically Z to A\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data).to.be.an('array');",
+                  "    pm.expect(data.length).to.be.above(0);",
+                  "    for (let i = 0; i < data.length - 1; i++) {",
+                  "        pm.expect(data[i].name.localeCompare(data[i + 1].name)).to.be.at.least(0);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test 3: sort=colour -> 400 (\"Cannot sort by that field\")",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers?sort=colour",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"],
+              "query": [
+                { "key": "sort", "value": "colour" }
+              ]
+            },
+            "description": "Test 3 required by brief: Unknown sort field returns 400 and 'Cannot sort by that field'."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Message is 'Cannot sort by that field'\", function () {",
+                  "    const data = pm.response.json();",
+                  "    const msg = data.error || data.message;",
+                  "    pm.expect(msg).to.eql(\"Cannot sort by that field\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Speakers (CRUD & Search)",
+      "item": [
+        {
+          "name": "Get All Speakers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Returns array of speakers\", function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search Speakers by Type (Query Param)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers?type=Subwoofer",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"],
+              "query": [
+                { "key": "type", "value": "Subwoofer" }
+              ]
+            },
+            "description": "Search by query parameter as specified in the brief."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"All returned items match type\", function () {",
+                  "    const data = pm.response.json();",
+                  "    data.forEach(item => {",
+                  "        pm.expect(item.type.toLowerCase()).to.include('subwoofer');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Speaker by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Returns speaker object\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data).to.have.property('id', 1);",
+                  "    pm.expect(data).to.have.property('name');",
+                  "    pm.expect(data).to.have.property('type');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Non-Existent Speaker (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers", "9999"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Returns error message\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Speaker (201 Created)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Martin Audio CDD-LIVE 12\",\n  \"type\": \"PA Speaker\",\n  \"status\": \"Available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/speakers",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Returns created speaker data\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data.data.name).to.eql(\"Martin Audio CDD-LIVE 12\");",
+                  "    pm.expect(data.data.type).to.eql(\"PA Speaker\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Speaker Validation Failure (Missing Name) [400]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"Stage Monitor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/speakers",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Returns validation error message\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Speaker [200]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alpha Sub Pro 18 Enhanced\",\n  \"type\": \"Subwoofer\",\n  \"status\": \"Available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/speakers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Speaker updated\", function () {",
+                  "    pm.expect(pm.response.json().data.name).to.eql(\"Alpha Sub Pro 18 Enhanced\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Speaker [200]",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/speakers/8",
+              "host": ["{{baseUrl}}"],
+              "path": ["speakers", "8"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Bookings (Join Endpoint)",
+      "item": [
+        {
+          "name": "Get All Bookings (Joined with Tech & Speaker Name)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings"]
+            },
+            "description": "Required Join Endpoint: Bookings joined with technician name and speaker name."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Contains joined technician and speaker names\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data).to.be.an('array');",
+                  "    pm.expect(data.length).to.be.above(0);",
+                  "    data.forEach(booking => {",
+                  "        pm.expect(booking).to.have.property('technician_name');",
+                  "        pm.expect(booking).to.have.property('speaker_name');",
+                  "        pm.expect(booking.technician_name).to.not.be.empty;",
+                  "        pm.expect(booking.speaker_name).to.not.be.empty;",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Bookings via /bookings/joined (Explicit Alias)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/joined",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "joined"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Contains technician_name and speaker_name\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data[0]).to.have.property('technician_name');",
+                  "    pm.expect(data[0]).to.have.property('speaker_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Contains joined properties\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data).to.have.property('technician_name');",
+                  "    pm.expect(data).to.have.property('speaker_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create New Booking (Lend Speaker) [201]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speaker_id\": 2,\n  \"technician_id\": 1,\n  \"club_name\": \"Jazz Club\",\n  \"event_name\": \"Weekend Jam Session\",\n  \"borrow_date\": \"2026-11-16\",\n  \"return_date\": \"2026-11-18\",\n  \"status\": \"Active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Created booking returns joined info\", function () {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data.data).to.have.property('technician_name');",
+                  "    pm.expect(data.data).to.have.property('speaker_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Booking (Return Equipment) [200]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Returned\",\n  \"return_date\": \"2026-11-13\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Booking marked as Returned\", function () {",
+                  "    pm.expect(pm.response.json().data.status).to.eql(\"Returned\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Technicians",
+      "item": [
+        {
+          "name": "Get All Technicians",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/technicians",
+              "host": ["{{baseUrl}}"],
+              "path": ["technicians"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Returns array of technicians\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Technician by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/technicians/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["technicians", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Returns technician object\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Technician [201]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sarah Connor\",\n  \"email\": \"sarah.connor@stagecraft.edu\",\n  \"phone\": \"555-0199\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/technicians",
+              "host": ["{{baseUrl}}"],
+              "path": ["technicians"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Technician Validation Error (Missing Email) [400]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nameless Tech\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/technicians",
+              "host": ["{{baseUrl}}"],
+              "path": ["technicians"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
