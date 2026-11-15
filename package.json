@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node src/server.js",
-    "test": "node test/test.js"
+    "test": "node test/test.js",
+    "reset-db": "node scripts/reset-db.js"
   },
   "keywords": [
     "express",
