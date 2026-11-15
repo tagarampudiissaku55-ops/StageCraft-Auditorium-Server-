@@ -1,0 +1,24 @@
+{
+  "name": "stagecraft-auditorium-backend",
+  "version": "1.0.0",
+  "description": "Sound equipment tracking backend system for StageCraft Auditorium (BDF Group Assignment JP-GAI2C-G10)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "express",
+    "sqlite3",
+    "sound-equipment",
+    "stagecraft",
+    "backend-fundamentals"
+  ],
+  "author": "Joel Prashanth (JP-GAI2C-G10)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "sqlite3": "^5.1.7"
+  }
+}
