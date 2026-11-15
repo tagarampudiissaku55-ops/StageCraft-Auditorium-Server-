@@ -3,7 +3,7 @@
 **Backend Development Fundamentals (Modules 1 to 3 · 100 marks)**  
 **Client Brief Code:** `JP-GAI2C-G10`  
 **Theme 25 of 30:** Sound equipment  
-**Student / Group:** Joel Prashanth · Section GAI2C · Group 10 of 10 (Card 355 of 375)
+**Student / Group:** Issaku Tagarampudi · Section GAI2C · Group 10 of 10 (Card 355 of 375)
 
 ---
 
@@ -21,12 +21,12 @@ This backend system provides a full relational tracking solution using **Express
 
 | Part | Role / Domain | Assigned To | Key Responsibilities |
 |---|---|---|---|
-| **1** | **Server and routes** | Joel Prashanth | Express server architecture, routing layer, HTTP status codes (200, 201, 400, 404, 500) |
-| **2** | **Database** | Joel Prashanth | SQLite database configuration, relational schema for 3 tables, foreign keys, seeding |
-| **3** | **REST endpoints** | Joel Prashanth | CRUD operations on `speakers`, `technicians`, and the relational join endpoint |
-| **4** | **Validation and search** | Joel Prashanth | Input checks, non-empty validations, clear error messages, query search by type/name |
-| **5** | **Twist rule** | Joel Prashanth | Implementation and verification of the 3 sorting tests (`sort=name&order=asc/desc`, `sort=colour`) |
-| **6** | **Postman and README** | Joel Prashanth | Comprehensive Postman collection with test assertions, system documentation |
+| **1** | **Server and routes** | Issaku Tagarampudi | Express server architecture, routing layer, HTTP status codes (200, 201, 400, 404, 500) |
+| **2** | **Database** | Issaku Tagarampudi | SQLite database configuration, relational schema for 3 tables, foreign keys, seeding |
+| **3** | **REST endpoints** | Issaku Tagarampudi | CRUD operations on `speakers`, `technicians`, and the relational join endpoint |
+| **4** | **Validation and search** | Issaku Tagarampudi | Input checks, non-empty validations, clear error messages, query search by type/name |
+| **5** | **Twist rule** | Issaku Tagarampudi | Implementation and verification of the 3 sorting tests (`sort=name&order=asc/desc`, `sort=colour`) |
+| **6** | **Postman and README** | Issaku Tagarampudi | Comprehensive Postman collection with test assertions, system documentation |
 
 *(In accordance with the brief: "One part per member; small groups combine parts".)*
 
@@ -162,8 +162,8 @@ CREATE TABLE bookings (
     "return_date": "2026-11-13",
     "status": "Active",
     "technician_id": 1,
-    "technician_name": "Joel Prashanth",
-    "technician_email": "joel.prashanth@stagecraft.edu",
+    "technician_name": "Issaku Tagarampudi",
+    "technician_email": "issaku.tagarampudi@stagecraft.edu",
     "speaker_id": 1,
     "speaker_name": "Alpha Sub Pro 18",
     "speaker_type": "Subwoofer"

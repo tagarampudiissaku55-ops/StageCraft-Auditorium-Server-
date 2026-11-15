@@ -70,7 +70,7 @@ const seedDB = async () => {
   // Seed Technicians
   await run(`
     INSERT INTO technicians (name, email, phone) VALUES
-    ('Joel Prashanth', 'joel.prashanth@stagecraft.edu', '555-0101'),
+    ('Issaku Tagarampudi', 'issaku.tagarampudi@stagecraft.edu', '555-0101'),
     ('Aria Chen', 'aria.chen@stagecraft.edu', '555-0102'),
     ('Marcus Vance', 'marcus.vance@stagecraft.edu', '555-0103')
   `);

@@ -3,7 +3,7 @@
 **Date:** Monday, 16 November  
 **Time Limit:** Exactly 3 Minutes Live Demo + Member Q&A  
 **Weightage:** 70 Marks Group (Build, Twist, Postman, README) + 30 Marks Individual (Demo Answer, Commits, Peer Rating)  
-**Group Reference:** `JP-GAI2C-G10` (Joel Prashanth) · Theme 25: Sound Equipment
+**Group Reference:** `JP-GAI2C-G10` (Issaku Tagarampudi) · Theme 25: Sound Equipment
 
 ---
 

@@ -17,7 +17,7 @@ app.get('/api', (req, res) => {
   res.status(200).json({
     project: 'StageCraft Auditorium Sound Equipment Tracking System',
     brief: 'BDF Group Assignment - Theme 25: Sound Equipment',
-    group: 'JP-GAI2C-G10 (Joel Prashanth)',
+    group: 'JP-GAI2C-G10 (Issaku Tagarampudi)',
     status: 'Running',
     endpoints: {
       speakers: '/speakers',

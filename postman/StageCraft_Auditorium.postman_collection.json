@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a9b74301-8b17-48f6-a81d-e97d1b3f9c01",
     "name": "StageCraft Auditorium - Sound Equipment API (JP-GAI2C-G10)",
-    "description": "Postman Collection for StageCraft Auditorium Sound Equipment Tracking System.\nBDF Group Assignment · Theme 25: Sound Equipment · Group JP-GAI2C-G10 (Joel Prashanth).\nIncludes tests for full CRUD, validation, the join endpoint, and all 3 Twist tests.",
+    "description": "Postman Collection for StageCraft Auditorium Sound Equipment Tracking System.\nBDF Group Assignment · Theme 25: Sound Equipment · Group JP-GAI2C-G10 (Issaku Tagarampudi).\nIncludes tests for full CRUD, validation, the join endpoint, and all 3 Twist tests.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

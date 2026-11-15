@@ -16,7 +16,7 @@
     "stagecraft",
     "backend-fundamentals"
   ],
-  "author": "Joel Prashanth (JP-GAI2C-G10)",
+  "author": "Issaku Tagarampudi (JP-GAI2C-G10)",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
